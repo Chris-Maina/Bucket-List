@@ -31,7 +31,7 @@ def login():
             passwd = request.form['passwd']
 
             res = user.login(email, passwd)
-            print(res)
+
             if email in res.keys():
                 session['logged_in'] = {
                     'name': res[email]['name'],
@@ -99,6 +99,7 @@ def sign_up():
 # defining create-bucketlist page route
 @app.route('/create-bucketlist', methods=['GET', 'POST'])
 def create_bucket():
+
     if 'logged_in' in session.keys():
         if request.method == 'POST':
             title = request.form['title']
@@ -109,11 +110,17 @@ def create_bucket():
             user_id = session['logged_in']['name']
 
             res = event.add_bucket_list(title, category, location, date, desc, user_id)
+
             if 'success' in res.keys():
                 return redirect('/bucket-list')
-            return render_template("add-bucket-list.html", data=res)
+            return render_template("add-bucket-list.html", data={
+                'res': res,
+                'category': event.category_list
+            })
         elif request.method == "GET":
-            return render_template("add-bucket-list.html")
+            return render_template("add-bucket-list.html", data={
+                'category': event.category_list
+            })
     else:
         return redirect('/login')
 
@@ -177,8 +184,14 @@ def add_checklist():
             title = request.form['goal']
             bucket_list = request.form['bucket_list']
             res = event.add_step(bucket_list, title)
+            data = {
+                'bucket_list': bucket_list,
+                'check_list': event.get_checklist(),
+                'bucket_status': event.get_bucket_list()[bucket_list]['status'],
+                'msg': res,
+            }
 
-            return redirect('/checklist/' + bucket_list)
+            return render_template("checklist.html", data=data)
 
         else:
             return redirect('/bucket-list')
@@ -189,19 +202,26 @@ def add_checklist():
 # defining delete-checklist page route
 @app.route('/delete-checklist/', methods=['GET'])
 def del_checklist():
-    bucket_list = request.args.get('bucket')
-    check_list = request.args.get('checklist')
-    msg = event.del_step(bucket_list, check_list)
-    print(msg)
-    url = '/checklist/' + bucket_list
-    return redirect(url)
-
+    if 'logged_in' in session.keys():
+        bucket_list = request.args.get('bucket')
+        check_list = request.args.get('checklist')
+        msg = event.del_step(bucket_list, check_list)
+        url = '/checklist/' + bucket_list
+        return redirect(url)
+    else:
+        return redirect('/login')
 
 # defining edit-bucket page route
 @app.route('/edit-bucket/<title>')
 def edit_bucket(title):
-    bucket_list = event.get_bucket_list()[title]
-    return render_template('edit_bucket.html', data=bucket_list)
+    if 'logged_in' in session.keys():
+        bucket_list = event.get_bucket_list()[title]
+        return render_template('edit_bucket.html', data={
+            'res': bucket_list,
+            'category': event.category_list,
+        })
+    else:
+        return redirect('/login')
 
 
 # defining update-bucket page route
@@ -217,7 +237,6 @@ def update_bucket():
             user_id = session['logged_in']['name']
 
             res = event.update_bucket_list(title, category, location, date, desc, user_id)
-            print(res)
             if 'success' in res.keys():
                 return redirect('/bucket-list')
             return render_template("add-bucket-list.html", data=res)
