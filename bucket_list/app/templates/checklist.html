@@ -124,10 +124,10 @@ input:checked + label {
 <main>
   <h2> Checklist</h2>
   <input id="tab-a" type="radio" name="tabs" checked>
-  <label for="tab-a">Active Checklist</label>
+  <label for="tab-a">Active Checklist <span class="glyphicon glyphicon-info-sign"></span></label>
 
   <input id="tab-b" type="radio" name="tabs">
-  <label for="tab-b">Completed</label>
+  <label for="tab-b">Completed <span class="glyphicon glyphicon-ok-sign"></span></label>
 
 
   <section id="content1" style="width: 1000px; min-height: 500px;">
@@ -135,9 +135,24 @@ input:checked + label {
 
         <div class="container-fluid">
 
+            {% if data['msg'] %}
+                {% if 'success' in data['msg'].keys() %}
+                    <div class="alert bg-success" role="alert" style="width: 700px;">
+                        <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg>
+                        {{ data['msg']['success'] }}
+                        <a href="/checklist/{{ data['bucket_list'] }}" class="pull-right"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                {% elif 'error' in data['msg'].keys() %}
+                    <div class="alert bg-danger" role="alert" style="width: 700px;">
+                        <svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg>
+                        {{ data['msg']['error'] }}
+                        <a href="/checklist/{{ data['bucket_list'] }}" class="pull-right"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                {% endif %}
+            {% endif %}
+
             <div  style="width: 1000px; min-height: 500px;">
             {% if data['bucket_status'] == "Active" %}
-                {{ data['status'] }}
 			<form class="form-inline" method="post" action="/add-checklist">
               <div class="form-group">
                   <input type="text" name="bucket_list" value="{{ data['bucket_list'] }}" hidden>
