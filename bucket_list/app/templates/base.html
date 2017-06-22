@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/landing-page.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/datepicker3.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/style1.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/landing-page.css') }}" rel="stylesheet">
+
+    <!--Icons-->
+    <script src="{{ url_for('static',filename='js/lumino.glyphs.js') }}"></script>
+
+    {% block custom_style %}{% endblock %}
+
+
+
+
+</head>
+
+<body>
+
+        <!--navigation bar-->
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" >
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/"><span>BUCKET</span>LIST</a>
+                {% if 'logged_in' in session.keys() %}
+                <a class="navbar-brand" href="/bucket-list" style="margin-left: 20px">MY BUCKETLIST</a>
+                    {% endif %}
+				<ul class="user-menu">
+					<li class="dropdown pull-right">
+                        {% if 'logged_in' in session.keys() %}
+                        <a href="/create-bucketlist" class="btn btn-success" style="margin-right: 30px;">Create Bucketlist</a>
+                        {% endif %}
+                        <a style="margin-right: 20px;">
+                        {% if 'logged_in' in session.keys() %}
+
+                            Hello {{ session['logged_in']['name'] }}
+
+                          {% else %}
+                            Hello Guest
+                          {% endif %}
+
+                        </a>
+
+						<a href="" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user" style="width: 30px; height: 30px;">
+                            <use xlink:href="#stroked-male-user"></use></svg>
+                            </a>
+
+						<ul class="dropdown-menu" role="menu">
+                            {% if 'logged_in' not in session.keys() %}
+							<li><a href="/sign-up"><svg class="glyph stroked gear"><use xlink:href="#stroked-gear"></use></svg> Sign Up</a></li>
+							<li><a href="/login"><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Sign In</a></li>
+                            {% else %}
+
+							<li><a href="/logout"><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Logout</a></li>
+                            {% endif %}
+						</ul>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+	</nav>
+
+
+    <!--main-->
+
+
+    {% block body %}
+
+
+    {% endblock %}
+    <!-- jQuery -->
+    <script src="{{ url_for('static',filename='js/jquery.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+
+</body>
+
+</html>
