@@ -46,7 +46,16 @@ class TestUser(unittest.TestCase):
         self.user.users = {}
         self.user.create_account('ian', 'email@mail.com', 'ian', 'ian')
         login = self.user.login('email@mail.com', 'ian123')
-        self.assertEqual(login, {'error': 'Incorrect Login'}, "Output should be {'error': 'Incorrect Login'}")
+        self.assertEqual(login, {'error': 'Incorrect Login credentials'}, "Output should be {'error': 'Incorrect Login'}")
+
+    # defining method to test login with wrong credentials
+    def test_correct_login(self):
+        self.user.users = {}
+        self.user.create_account('ian', 'email@mail.com', 'ian', 'ian')
+        login = self.user.login('email@mail.com', 'ian')
+        self.assertEqual(login, {'email@mail.com': {'pass': 'ian', 'name': 'ian', 'email': 'email@mail.com'}},
+                         "Output should be {'email@mail.com': {'pass': 'ian', 'name': 'ian', 'email': "
+                         "'email@mail.com'}}")
 
     # defining method to test creating existing account
     def test_create_existing_user_account(self):
