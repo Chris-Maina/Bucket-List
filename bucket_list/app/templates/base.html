@@ -19,6 +19,7 @@
     <link href="{{ url_for('static',filename='css/styles.css') }}" rel="stylesheet">
     <link href="{{ url_for('static',filename='css/style1.css') }}" rel="stylesheet">
     <link href="{{ url_for('static',filename='css/landing-page.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/bootstrap-datetimepicker.css') }}" rel="stylesheet" >
 
     <!--Icons-->
     <script src="{{ url_for('static',filename='js/lumino.glyphs.js') }}"></script>
@@ -93,6 +94,8 @@
     <!-- jQuery -->
     <script src="{{ url_for('static',filename='js/jquery.js') }}"></script>
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+    {% block script %}
+    {% endblock %}
 
 </body>
 
