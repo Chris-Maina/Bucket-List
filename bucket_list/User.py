@@ -67,7 +67,7 @@ class User:
     # defining method to validate credentials for login purpose
     def login(self, email, passwd):
         msg = {
-            'error': 'Incorrect Login'
+            'error': 'Incorrect Login credentials'
         }
         if email is None or email == '' or passwd is None or passwd == '':
             msg = {
