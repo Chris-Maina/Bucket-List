@@ -126,10 +126,10 @@ input:checked + label {
     <h2>My Bucketlist</h2>
 
   <input id="tab-a" type="radio" name="tabs" checked>
-  <label for="tab-a">Active Goals</label>
+  <label for="tab-a">Active Goals <span class="glyphicon glyphicon-info-sign success"></span></label>
 
   <input id="tab-b" type="radio" name="tabs">
-  <label for="tab-b">Completed</label>
+  <label for="tab-b">Completed <span class="glyphicon glyphicon-ok-sign"></span></label>
 
 
   <section id="content1" style="width: 1000px; min-height: 500px;">
@@ -160,6 +160,8 @@ input:checked + label {
             </div>
                 {% endif %}
             {% endfor %}
+          {% else %}
+              <center><h3 class="panel-body">Active Bucket lists not available at the moment</h3></center>
           {% endif %}
 
 
@@ -167,13 +169,15 @@ input:checked + label {
 
   <section id="content2" style="width: 1000px; min-height: 500px;">
     {% if data %}
+
             {% for item in data %}
                 {% if data[item]['status'] == 'Completed' and data[item]['user_id'] == session['logged_in']['name'] %}
+
                 <div class="container-fluid">
                     <a href="/checklist/{{ item }}"><h2>{{ item }}</h2></a>
                     <h4>Category: {{ data[item]['category'] }}</h4>
-                    <h5>Location: {{ data[item]['location'] }}</h5>
-                    <h5>Date: {{ data[item]['date'] }}</h5>
+                    <h5><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> {{ data[item]['location'] }}</h5>
+                    <h5><span class="glyphicon glyphicon-calendar"></span> {{ data[item]['date'] }}</h5>
 
                     <p>{{ data[item]['description'] }}</p>
                     <div>
@@ -182,7 +186,9 @@ input:checked + label {
                 </div>
                 {% endif %}
             {% endfor %}
-          {% endif %}
+     {% else %}
+          <center><h3 class="panel-body">Completed Bucket lists not available at the moment</h3></center>
+      {% endif %}
 
   </section>
 
