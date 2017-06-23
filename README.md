@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/iankigen/Bucket-List.svg?branch=master)]
-(https://travis-ci.org/travis-ci/travis-web)
+
 
 [![Coverage Status](https://coveralls.io/repos/github/iankigen/Bucket-List/badge.svg?branch=master)](https://coveralls.io/github/iankigen/Bucket-List?branch=master)
 
