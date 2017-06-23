@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/iankigen/Bucket-List/badge.svg?branch=master)](https://coveralls.io/github/iankigen/Bucket-List?branch=master)
+
 # Bucket-List
 
 This repository contains the following:
