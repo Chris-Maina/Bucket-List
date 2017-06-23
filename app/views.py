@@ -229,6 +229,7 @@ def edit_bucket(title):
 def update_bucket():
     if 'logged_in' in session.keys():
         if request.method == 'POST':
+
             title = request.form['title']
             location = request.form['location']
             category = request.form['category']
@@ -239,8 +240,10 @@ def update_bucket():
             res = event.update_bucket_list(title, category, location, date, desc, user_id)
             if 'success' in res.keys():
                 return redirect('/bucket-list')
-            return render_template("add-bucket-list.html", data=res)
-        elif request.method == "GET":
-            return render_template("add-bucket-list.html")
+            return render_template("add-bucket-list.html", data={
+                'res': res,
+            })
+        return redirect('/bucket-list')
+
     else:
         return redirect('/login')
