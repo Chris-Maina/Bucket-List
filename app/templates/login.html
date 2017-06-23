@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <br><br>
+
+    {% if 'data' in data.keys() %}
+        <div align="center">
+            <div class="alert bg-danger" role="alert" style="width: 520px;">
+					<svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> {{ data['data'] }}
+                        <a href="{% if data['url'] == '/login' %}/login{% else %}/sign-up{% endif %}" class="pull-right"><span class="glyphicon glyphicon-remove"></span></a>
+				</div>
+        </div>
+
+    {% endif %}
+
+  <div class="login-wrap">
+	<div class="login-html">
+		<input id="tab-1" type="radio" name="tab" class="sign-in" {% if data['url'] == '/login' %}checked{% endif %}><label for="tab-1" class="tab">Sign In</label>
+		<input id="tab-2" type="radio" name="tab" class="sign-up" {% if data['url'] == '/sign-up' %}checked{% endif %}><label for="tab-2" class="tab">Sign Up</label>
+		<div class="login-form">
+            <form action="/login" method="post">
+			<div class="sign-in-htm">
+                <br>
+				<div class="group">
+					<label for="user" class="label">Email</label>
+                    <br>
+					<input id="user" name="email" type="text" class="input">
+				</div>
+                <br>
+				<div class="group">
+					<label for="pass" class="label">Password</label>
+                    <br>
+					<input id="pass" name="passwd" type="password" class="input" data-type="password">
+				</div>
+                <br><br>
+				<div class="group">
+					<input type="submit" class="button" value="Sign In">
+				</div>
+				<div class="hr"></div>
+                <br>
+				<div class="foot-lnk">
+					<a href="/sign-up">Not a member?</a>
+				</div>
+			</div>
+           </form>
+			<div class="sign-up-htm">
+                <form action="/sign-up" method="post">
+                    <div class="group">
+                        <label for="user" class="label">Username</label>
+                        <input name="name" type="text" class="input">
+                    </div>
+                    <div class="group">
+                        <label for="pass" class="label">Password</label>
+                        <input id="pass" name="passwd" type="password" class="input" data-type="password">
+                    </div>
+                    <div class="group">
+                        <label for="pass" class="label">Repeat Password</label>
+                        <input id="pass" name="cpasswd" type="password" class="input" data-type="password">
+                    </div>
+                    <div class="group">
+                        <label for="pass" class="label">Email Address</label>
+                        <input id="pass" name="email" type="email" class="input">
+                    </div>
+                    <br>
+                    <div class="group">
+                        <input type="submit" class="button" value="Sign Up">
+                    </div>
+                    <hr class="hr">
+                    <div class="foot-lnk">
+                        <a href="/login">Already Member?</a>
+                    </div>
+                </form>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
