@@ -8,7 +8,6 @@ script:
   - "python bucket_list/test_for_class_BucketList.py"
   - "python bucket_list/test_for_class_User.py"
   - "coverage run test_for_class_User.py"
-  - "coverage run test_for_class_BucketList.py"
 after_success: coveralls
 
  
