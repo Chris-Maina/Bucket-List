@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}Bucketlist{% endblock %}
+
+{% block custom_style %}
+<style>
+      /*  The styles were added inline because the nav needs access to your styles and they must be in lined if they are
+      on local disk! */
+
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font: 14px/1 'Open Sans', sans-serif;
+  color: #555;
+  background: #eee;
+}
+
+h1 {
+  padding: 50px 0;
+  font-weight: 400;
+  text-align: center;
+}
+
+p {
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+main {
+  min-width: 320px;
+  max-width: 1200px;
+  padding: 50px;
+  margin: 30px auto;
+  background: #fff;
+}
+
+section {
+  display: none;
+  padding: 20px 0 0;
+  border-top: 1px solid #ddd;
+}
+
+input {
+  display: none;
+}
+
+label {
+  display: inline-block;
+  margin: 0 0 -1px;
+  padding: 15px 25px;
+  font-weight: 600;
+  text-align: center;
+  color: #bbb;
+  border: 1px solid transparent;
+}
+
+label:before {
+
+  font-weight: normal;
+  margin-right: 10px;
+}
+
+label[for*='1']:before {
+  content: '\f1cb';
+}
+
+label[for*='2']:before {
+  content: '\f17d';
+}
+
+label[for*='3']:before {
+  content: '\f16b';
+}
+
+label[for*='4']:before {
+  content: '\f1a9';
+}
+
+label:hover {
+  color: #888;
+  cursor: pointer;
+}
+
+input:checked + label {
+  color: #555;
+  border: 1px solid #ddd;
+  border-top: 2px solid orange;
+  border-bottom: 1px solid #fff;
+}
+
+#tab-a:checked ~ #content1,
+#tab-b:checked ~ #content2{
+  display: block;
+}
+
+@media screen and (max-width: 650px) {
+  label {
+    font-size: 0;
+  }
+
+  label:before {
+    margin: 0;
+    font-size: 18px;
+  }
+}
+@media screen and (max-width: 400px) {
+  label {
+    padding: 15px;
+  }
+}
+
+    </style>
+{% endblock %}
+
+{% block body %}
+
+<main>
+  <h2> Checklist</h2>
+  <input id="tab-a" type="radio" name="tabs" checked>
+  <label for="tab-a">Active Checklist <span class="glyphicon glyphicon-info-sign"></span></label>
+
+  <input id="tab-b" type="radio" name="tabs">
+  <label for="tab-b">Completed <span class="glyphicon glyphicon-ok-sign"></span></label>
+
+
+  <section id="content1" style="width: 1000px; min-height: 500px;">
+
+
+        <div class="container-fluid">
+
+            {% if data['msg'] %}
+                {% if 'success' in data['msg'].keys() %}
+                    <div class="alert bg-success" role="alert" style="width: 700px;">
+                        <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg>
+                        {{ data['msg']['success'] }}
+                        <a href="/checklist/{{ data['bucket_list'] }}" class="pull-right"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                {% elif 'error' in data['msg'].keys() %}
+                    <div class="alert bg-danger" role="alert" style="width: 700px;">
+                        <svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg>
+                        {{ data['msg']['error'] }}
+                        <a href="/checklist/{{ data['bucket_list'] }}" class="pull-right"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <div  style="width: 1000px; min-height: 500px;">
+            {% if data['bucket_status'] == "Active" %}
+			<form class="form-inline" method="post" action="/add-checklist">
+              <div class="form-group">
+                  <input type="text" name="bucket_list" value="{{ data['bucket_list'] }}" hidden>
+                <input type="text" name="goal" class="form-control" id="" placeholder="Add a goal"
+                       style="min-width:600px; border: 1px solid;">
+              </div>
+              <input type="submit" class="btn btn-success" value="Add Goal">
+            </form>
+            {% else %}
+                <h3>No Active Goals</h3>
+            {% endif %}
+            <form action="/change-checklist-status" method="post">
+            <div style="margin-top: 30px;">
+                {% for item in  data['check_list'] %}
+                 {% if data['check_list'][item]['status'] == "Active" and data['check_list'][item]['bucket_list'] == data['bucket_list'] %}
+                    <div class="container-fluid" style="min-width: 700px;">
+                        <div style="margin-left: 15px;">
+                            <ul>
+
+                            <li>
+                                {{ item }}
+                            </li>
+
+                        </ul>
+                        </div>
+                        <input type="text" name="bucket_list" value="{{ data['bucket_list'] }}" hidden>
+                        <input type="text" value="{{ item }}" name="checklist" hidden>
+                        <br><br> <input type="submit" class="btn btn-success" value="Mark as done">
+                        <a href="/delete-checklist/?bucket={{ data['bucket_list'] }}&&checklist={{ item }}"
+                           class="btn btn-danger">Delete Checklist</a>
+                        <br><br><br>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            </form>
+            </div>
+    </div>
+
+  </section>
+
+  <section id="content2" style="width: 1000px; min-height: 500px;">
+
+      <div class="container-fluid">
+
+            <div  style="width: 1000px; min-height: 500px;">
+            <form action="/change-checklist-status" method="post">
+            <div style="margin-top: 30px;">
+                {% for item in  data['check_list'] %}
+                {% if data['check_list'][item]['status'] == "Completed" and data['check_list'][item]['bucket_list'] == data['bucket_list'] %}
+                    <div class="container-fluid" style="min-width: 700px;">
+                        <div style="margin-left: 15px;">
+                            <ul>
+
+                            <li>
+                                {{ item }}
+                            </li>
+
+                        </ul>
+                        </div>
+                        <input type="text" name="bucket_list" value="{{ data['bucket_list'] }}" hidden>
+                        <input type="text" value="{{ item }}" name="checklist" hidden>
+                        <br><br>
+                        <a href="/delete-checklist/?bucket={{ data['bucket_list'] }}&&checklist={{ item }}"
+                           class="btn btn-danger">Delete Checklist</a>
+                        <br><br><br>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            </form>
+            </div>
+    </div>
+
+  </section>
+
+
+</main>
+
+{% endblock %}
