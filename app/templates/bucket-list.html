@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% block title %}Bucketlist{% endblock %}
+
+{% block custom_style %}
+<style>
+      /*  The styles were added inline because the nav needs access to your styles and they must be in lined if they are
+      on local disk! */
+
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font: 14px/1 'Open Sans', sans-serif;
+  color: #555;
+  background: #eee;
+}
+
+h1 {
+  padding: 50px 0;
+  font-weight: 400;
+  text-align: center;
+}
+
+p {
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+main {
+  min-width: 320px;
+  max-width: 1200px;
+  padding: 50px;
+  margin: 30px auto;
+  background: #fff;
+}
+
+section {
+  display: none;
+  padding: 20px 0 0;
+  border-top: 1px solid #ddd;
+}
+
+input {
+  display: none;
+}
+
+label {
+  display: inline-block;
+  margin: 0 0 -1px;
+  padding: 15px 25px;
+  font-weight: 600;
+  text-align: center;
+  color: #bbb;
+  border: 1px solid transparent;
+}
+
+label:before {
+
+  font-weight: normal;
+  margin-right: 10px;
+}
+
+label[for*='1']:before {
+  content: '\f1cb';
+}
+
+label[for*='2']:before {
+  content: '\f17d';
+}
+
+label[for*='3']:before {
+  content: '\f16b';
+}
+
+label[for*='4']:before {
+  content: '\f1a9';
+}
+
+label:hover {
+  color: #888;
+  cursor: pointer;
+}
+
+input:checked + label {
+  color: #555;
+  border: 1px solid #ddd;
+  border-top: 2px solid orange;
+  border-bottom: 1px solid #fff;
+}
+
+#tab-a:checked ~ #content1,
+#tab-b:checked ~ #content2{
+  display: block;
+}
+
+@media screen and (max-width: 650px) {
+  label {
+    font-size: 0;
+  }
+
+  label:before {
+    margin: 0;
+    font-size: 18px;
+  }
+}
+@media screen and (max-width: 400px) {
+  label {
+    padding: 15px;
+  }
+}
+
+    </style>
+{% endblock %}
+
+{% block body %}
+
+<main>
+
+    <h2>My Bucketlist</h2>
+
+  <input id="tab-a" type="radio" name="tabs" checked>
+  <label for="tab-a">Active Goals <span class="glyphicon glyphicon-info-sign success"></span></label>
+
+  <input id="tab-b" type="radio" name="tabs">
+  <label for="tab-b">Completed <span class="glyphicon glyphicon-ok-sign"></span></label>
+
+
+  <section id="content1" style="width: 1000px; min-height: 500px;">
+
+          {% if data %}
+            {% for item in data %}
+                {% if data[item]['status'] == 'Active' and data[item]['user_id'] == session['logged_in']['name'] %}
+            <div class="container-fluid">
+                <a href="/checklist/{{ item }}"><h2>{{ item }}</h2></a>
+                <h4>Category: {{ data[item]['category'] }}</h4>
+                <h5>Location: {{ data[item]['location'] }}</h5>
+                <h5>Date: {{ data[item]['date'] }}</h5>
+
+                <p>{{ data[item]['description'] }}</p>
+
+                <div>
+                    <form action="" method="post">
+                        <input type="text" name="title" value="{{ item }}" hidden>
+                        <!--<input type="submit" class="btn btn-success" value="Mark as Done">-->
+
+                        <a href="/checklist/{{ item }}" class="btn btn-success">Add checklist</a>
+                        <a href="/edit-bucket/{{ item }}" class="btn btn-info">Edit Bucketlist</a>
+                        <a href="/delete-bucket/{{ item }}" class="btn btn-danger">Delete</a>
+
+                    </form>
+                </div>
+
+            </div>
+                {% endif %}
+            {% endfor %}
+          {% else %}
+              <center><h3 class="panel-body">Active Bucket lists not available at the moment</h3></center>
+          {% endif %}
+
+
+  </section>
+
+  <section id="content2" style="width: 1000px; min-height: 500px;">
+    {% if data %}
+
+            {% for item in data %}
+                {% if data[item]['status'] == 'Completed' and data[item]['user_id'] == session['logged_in']['name'] %}
+
+                <div class="container-fluid">
+                    <a href="/checklist/{{ item }}"><h2>{{ item }}</h2></a>
+                    <h4>Category: {{ data[item]['category'] }}</h4>
+                    <h5><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> {{ data[item]['location'] }}</h5>
+                    <h5><span class="glyphicon glyphicon-calendar"></span> {{ data[item]['date'] }}</h5>
+
+                    <p>{{ data[item]['description'] }}</p>
+                    <div>
+                        <a href="/delete-bucket/{{ item }}" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+     {% else %}
+          <center><h3 class="panel-body">Completed Bucket lists not available at the moment</h3></center>
+      {% endif %}
+
+  </section>
+
+
+</main>
+
+{% endblock %}
